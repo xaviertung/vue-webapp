@@ -20,6 +20,7 @@
       <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
     </ul>
     <h3>Ecosystem</h3>
+    <div styleName="@wrapper">hahahah</div>
     <ul>
       <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
       <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
@@ -31,8 +32,12 @@
 </template>
 
 <script>
+import CSSModules from 'vue-css-modules';
+import styles from './HelloWorld.less';
+
 export default {
   name: 'HelloWorld',
+  mixins: [CSSModules(styles)],
   props: {
     msg: String,
   },
