@@ -21,6 +21,9 @@
     </ul>
     <h3>Ecosystem</h3>
     <div styleName="@wrapper">hahahah</div>
+    <div>
+      <v-img src="http://localhost:8080/img/logo.82b9c7a5.png" />
+    </div>
     <ul>
       <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
       <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
@@ -34,12 +37,16 @@
 <script>
 import CSSModules from 'vue-css-modules';
 import styles from './HelloWorld.less';
+import Image from './Image.vue';
 
 export default {
   name: 'HelloWorld',
   mixins: [CSSModules(styles)],
   props: {
     msg: String,
+  },
+  components: {
+    'v-img': Image,
   },
 };
 </script>
