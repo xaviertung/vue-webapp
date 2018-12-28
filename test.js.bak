@@ -1,0 +1,104 @@
+const currentYear = 2018;
+const currentMonth = 11;
+const currentDate = 28;
+const firstDate = new Date(currentYear, currentMonth - 1, 1);
+const lastDate = new Date(currentYear, currentMonth, 0);
+const firstDateWeekDay = firstDate.getDay();
+const lastDateWeekDay = lastDate.getDay();
+
+const allDates = [];
+allDates[0] = new Array();
+allDates[1] = new Array();
+allDates[2] = new Array();
+allDates[3] = new Array();
+allDates[4] = new Array();
+allDates[5] = new Array();
+
+let rowCount = 0;
+let colCount = 0;
+
+if (firstDateWeekDay > 0) {
+  let prevousMonth;
+  let prevousMonthYear;
+  if (currentMonth === 1) {
+    prevousMonth = 11;
+    prevousMonthYear = currentYear - 1;
+  } else {
+    prevousMonth = currentMonth - 1;
+    prevousMonthYear = currentYear;
+  }
+
+  const prevousMonthLastDate = new Date(prevousMonthYear, prevousMonth - 1, 0).getDate();
+
+  console.log(prevousMonthYear, prevousMonth, prevousMonthLastDate);
+  console.log(firstDateWeekDay);
+  console.log(7 - firstDateWeekDay);
+
+
+  for (let i = 0; i < firstDateWeekDay; i++) {
+    const dateInfo = {
+      type: 'prevous',
+      date: prevousMonthLastDate - (7 - i - 1),
+    };
+
+    // console.log(dateInfo)
+
+    allDates[rowCount][colCount] = dateInfo;
+
+    colCount++;
+    if (colCount % 7 === 0) {
+      rowCount++;
+      colCount = 0;
+    }
+  }
+}
+
+// console.log(allDates);
+console.log('lastDate.getDate():', lastDate.getDate());
+
+for (let i = 1; i <= lastDate.getDate(); i++) {
+  const dateInfo = {
+    type: 'current',
+    date: i,
+  };
+
+  console.log(dateInfo);
+  console.log(rowCount, colCount);
+
+  allDates[rowCount][colCount] = dateInfo;
+  // console.log(allDates);
+
+  colCount++;
+  if (colCount % 7 === 0) {
+    rowCount++;
+    colCount = 0;
+  }
+}
+
+// console.log(allDates);
+
+if (lastDateWeekDay < 6) {
+  let postDate = 0;
+  console.log('lastDateWeekDay:', lastDateWeekDay);
+  for (let i = 1; i < (7 - lastDateWeekDay); i++) {
+    postDate++;
+    const dateInfo = {
+      type: 'post',
+      date: postDate,
+    };
+    // console.log(dateInfo)
+    // console.log(allDates);
+    console.log(rowCount, colCount);
+    allDates[rowCount][colCount] = dateInfo;
+
+    colCount++;
+    if (colCount % 7 === 0) {
+      rowCount++;
+      colCount = 0;
+    }
+  }
+}
+// console.log(prevoustMonthDates);
+// console.log(currentMonthDates);
+// console.log(postMonthDates);
+console.log(allDates);
