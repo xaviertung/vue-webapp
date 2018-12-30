@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <table>
+  <div class="container">
+    <header>
+      <div class="prevous" v-on:click="decrease">上个月</div>
+      <div class="year">{{year}}</div>
+      <div class="month">{{month}}</div>
+      <div class="next" v-on:click="increase">下个月</div>
+    </header>
+    <table style="width:90%;">
       <thead>
         <tr>
           <th>日</th>
@@ -17,6 +23,11 @@
           <td
             v-for="(value, key, colIndex) in row"
             :key="colIndex"
+            :style="{
+              color: value.type=== 'current' &&
+              year === thisYear &&
+              month === thisMonth &&
+              value.date === today ? 'red' : 'black'}"
             :class="value.type === 'current' ? 'current' : value.type === 'prev' ? 'prev' : 'post'"
           >
             {{value.date}}
@@ -27,6 +38,25 @@
   </div>
 </template>
 <style scoped>
+.container {
+  font-size: 20px;
+}
+.prevous {
+  font-size: 1.2em;
+  display: inline-block;
+}
+.year {
+  font-size: 1.2em;
+  display: inline-block;
+}
+.month {
+  font-size: 1.2em;
+  display: inline-block;
+}
+.next {
+  font-size: 1.2em;
+  display: inline-block;
+}
 .prev {
   background: #8f8f8f;
 }
@@ -42,15 +72,42 @@
 export default {
   name: 'Calender',
   data() {
-    const year = 2018;
-    const month = 11;
-    const allDates = this.getDatesByMonth(year, month);
+    const now = new Date();
+    const today = now.getDate();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
     return {
-      allDates,
+      today,
+      year,
+      month,
+      thisYear: year,
+      thisMonth: month,
     };
   },
+  computed: {
+    allDates() {
+      return this.getDatesByMonth(this.year, this.month);
+    },
+  },
   methods: {
-    getDatesByMonth: (year, month) => {
+    increase() {
+      if (this.month === 12) {
+        this.year += 1;
+        this.month = 1;
+      } else {
+        this.month += 1;
+      }
+    },
+    decrease() {
+      if (this.month === 1) {
+        this.year -= 1;
+        this.month = 12;
+      } else {
+        this.month -= 1;
+      }
+    },
+    getDatesByMonth: (year, originMonth) => {
+      const month = originMonth - 1;
       const prevousMonth = {
         lastDate: new Date(year, month, 0).getDate(),
       };

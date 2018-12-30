@@ -7,8 +7,8 @@
   </div>
 </template>
 <script>
-import Calender from '@/components/Calender.vue';
-
+// import Calender from '@/components/Calender.vue';
+const Calender = () => import(/* webpackChunkName: "calender" */ '@/components/Calender.vue');
 export default {
   name: 'home',
   components: {
