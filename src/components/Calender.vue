@@ -1,12 +1,21 @@
 <template>
   <div class="container">
+    <div>
+      <div>{{thisYear}}</div>
+      <div>{{thisMonth}}</div>
+    </div>
     <header>
       <div class="prevous" v-on:click="decrease">上个月</div>
-      <div class="year">{{year}}</div>
-      <div class="month">{{month}}</div>
+      <div class="year">{{currentDate.year}}</div>
+      <div class="month">{{currentDate.month}}</div>
+      <div class="month">{{currentDate.date}}</div>
       <div class="next" v-on:click="increase">下个月</div>
     </header>
-    <table style="width:90%;">
+    <table
+      style="width:90%;"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd">
       <thead>
         <tr>
           <th>日</th>
@@ -25,10 +34,16 @@
             :key="colIndex"
             :style="{
               color: value.type=== 'current' &&
-              year === thisYear &&
-              month === thisMonth &&
-              value.date === today ? 'red' : 'black'}"
-            :class="value.type === 'current' ? 'current' : value.type === 'prev' ? 'prev' : 'post'"
+              value.year === today.getFullYear() &&
+              value.month === today.getMonth() + 1 &&
+              value.date === today.getDate() ? 'red' : 'black'}"
+            :class="[
+              value.type === 'current' ? 'current' : value.type === 'prev' ? 'prev' : 'post',
+              value.year === currentDate.year &&
+              value.month === currentDate.month &&
+              value.date === currentDate.date && 'active'
+              ]"
+            @click="handleDateSelect(value)"
           >
             {{value.date}}
           </td>
@@ -48,6 +63,9 @@
 .year {
   font-size: 1.2em;
   display: inline-block;
+}
+.active {
+  text-decoration: underline;
 }
 .month {
   font-size: 1.2em;
@@ -73,38 +91,73 @@ export default {
   name: 'Calender',
   data() {
     const now = new Date();
-    const today = now.getDate();
+    const today = now;
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
+    const date = now.getDate();
     return {
       today,
-      year,
-      month,
+      currentDate: {
+        year,
+        month,
+        date,
+      },
       thisYear: year,
       thisMonth: month,
+      startX: 0,
+      moveX: 0,
+      endX: 0,
     };
   },
   computed: {
     allDates() {
-      return this.getDatesByMonth(this.year, this.month);
+      return this.getDatesByMonth(this.thisYear, this.thisMonth);
     },
   },
   methods: {
     increase() {
-      if (this.month === 12) {
-        this.year += 1;
-        this.month = 1;
+      if (this.thisMonth === 12) {
+        this.thisYear += 1;
+        this.thisMonth = 1;
       } else {
-        this.month += 1;
+        this.thisMonth += 1;
       }
     },
     decrease() {
-      if (this.month === 1) {
-        this.year -= 1;
-        this.month = 12;
+      if (this.thisMonth === 1) {
+        this.thisYear -= 1;
+        this.thisMonth = 12;
       } else {
-        this.month -= 1;
+        this.thisMonth -= 1;
       }
+    },
+    handleTouchStart(e) {
+      this.startX = e.changedTouches[0].clientX;
+    },
+    handleTouchMove(e) {
+      this.moveX = e.changedTouches[0].clientX;
+    },
+    handleTouchEnd(e) {
+      e.stopPropagation();
+      this.endX = e.changedTouches[0].clientX;
+      const disX = this.endX - this.startX;
+      if (disX > 0) {
+        this.decrease();
+      }
+      if (disX < 0) {
+        this.increase();
+      }
+    },
+    handleDateSelect(value) {
+      console.log(value);
+      const { year, month, date } = value;
+      this.thisYear = year;
+      this.thisMonth = month;
+      this.currentDate = {
+        year,
+        month,
+        date,
+      };
     },
     getDatesByMonth: (year, originMonth) => {
       const month = originMonth - 1;
@@ -151,6 +204,8 @@ export default {
       for (let i = 0; i < currentMonth.firstDatePosition; i += 1) {
         const currentDate = {
           type: 'prev',
+          year: originMonth === 1 ? year - 1 : year,
+          month: originMonth === 1 ? 12 : originMonth - 1,
           date: prevousMonth.lastDate - (currentMonth.firstDatePosition - 1) + i,
         };
 
@@ -160,6 +215,8 @@ export default {
       for (let i = 1; i <= currentMonth.lastDate; i += 1) {
         const currentDate = {
           type: 'current',
+          year,
+          month: originMonth,
           date: i,
         };
         pushDate(currentDate);
@@ -172,6 +229,8 @@ export default {
       for (let i = currentMonth.lastDatePosition + 1; i <= 6; i += 1) {
         const currentDate = {
           type: 'post',
+          year: originMonth === 12 ? year + 1 : year,
+          month: originMonth === 12 ? 1 : originMonth + 1,
           date: i - currentMonth.lastDatePosition,
         };
         pushDate(currentDate);
