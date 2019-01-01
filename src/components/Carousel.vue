@@ -11,7 +11,7 @@
         :style="{width: width + 'px'}"
         v-for="item in list"
         :key="item">
-        <img :src="item" style="width:100%;height:100%;"/>
+        <v-img :src="item" style="width:100%;height:100%;"/>
       </li>
     </ul>
   </div>
@@ -20,20 +20,24 @@
 .list {
   padding-left: none;
   padding-inline-start: 0;
-  /* transform: translateX(375px); */
+  transform: translateX(0px);
 }
 .list-item {
   display: inline-block;
   height: 150px;
   box-sizing: border-box;
-  padding: 10px;
   background: #8f8f8f;
   transition: transform 2s;
 }
 </style>
 <script>
+import Image from '@/components/Image.vue';
+
 export default {
   name: 'Carousel',
+  components: {
+    'v-img': Image,
+  },
   data() {
     return {
       width: document.documentElement.clientWidth,
@@ -67,16 +71,12 @@ export default {
         if (this.position < 0) {
           this.position += this.width;
         }
-        // this.$refs.ref1.style.transform=`translateX(${this.position})`;
-        // console.log(this.$refs.ref1.style.transform)
-        // console.log(`translateX(${this.position})`)
+        // this.$refs.ref1.style.transform=`translateX(${this.position}px)`;
       }
       if (disX < 0) {
         // 0 -375 -750
         if (this.position > -((this.list.length - 1) * this.width)) this.position -= this.width;
-        // this.$refs.ref1.style.transform=`translateX(${this.position})`;
-        // console.log(this.$refs.ref1.style.cssText)
-        // console.log(`translateX(${this.position})`)
+        // this.$refs.ref1.style.transform=`translateX(${this.position}px)`;
       }
     },
   },
