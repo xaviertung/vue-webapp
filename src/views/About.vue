@@ -4,15 +4,20 @@
     <div>
       <Calender />
     </div>
+    <div>
+      <Carousel />
+    </div>
   </div>
 </template>
 <script>
-// import Calender from '@/components/Calender.vue';
+import Carousel from '@/components/Carousel.vue';
+
 const Calender = () => import(/* webpackChunkName: "calender" */ '@/components/Calender.vue');
 export default {
   name: 'home',
   components: {
     Calender,
+    Carousel,
   },
 };
 </script>
