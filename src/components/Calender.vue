@@ -141,12 +141,14 @@ export default {
       e.stopPropagation();
       this.endX = e.changedTouches[0].clientX;
       const disX = this.endX - this.startX;
-      if (disX > 0) {
+      if (disX > 10) {
         this.decrease();
       }
-      if (disX < 0) {
+      if (disX < -10) {
         this.increase();
       }
+      this.startX = 0;
+      this.endX = 0;
     },
     handleDateSelect(value) {
       console.log(value);

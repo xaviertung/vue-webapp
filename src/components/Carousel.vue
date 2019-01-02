@@ -24,7 +24,7 @@
 }
 .list-item {
   display: inline-block;
-  height: 150px;
+  /* height: 150px; */
   box-sizing: border-box;
   background: #8f8f8f;
   transition: transform 2s;
