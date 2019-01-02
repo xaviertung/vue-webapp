@@ -21,13 +21,12 @@
   padding-left: none;
   padding-inline-start: 0;
   transform: translateX(0px);
+  transition: transform 0.25s ease-out;
 }
 .list-item {
   display: inline-block;
-  /* height: 150px; */
   box-sizing: border-box;
   background: #8f8f8f;
-  transition: transform 2s;
 }
 </style>
 <script>
